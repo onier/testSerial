@@ -152,11 +152,13 @@ void testXML() {
     parameter.map2.insert({b2, b2});
     parameter.map2.insert({b3, b3});
     parameter.alignment = Alignment::AlignHCenter;
-    std::string text = puppy::common::XML::toXMLString(parameter);
+    rttr::variant pvariant(parameter);
+    std::string text = puppy::common::XML::toXMLString(pvariant);
     LOG(INFO) << text;
     auto result = puppy::common::XML::parseXML(text);
-    auto p = result[0].get_value<DataObject>();
-    text = puppy::common::XML::toXMLString(p);
+    DataObject &p = result[0].get_value<DataObject>();
+    rttr::variant variant(p);
+    text = puppy::common::XML::toXMLString(variant);
     LOG(INFO) << text;
 }
 
@@ -234,7 +236,8 @@ int main(int argc, char *argv[]) {
     bean.d = true;
     bean.name = "test";
     DataObject dataObject;
-    QRTTRTableModel *_tableModel = new QRTTRTableModel(bean);
+    rttr::variant variant(bean);
+    QRTTRTableModel *_tableModel = new QRTTRTableModel(variant);
 //    QRTTRTableModel *_tableModel = new QRTTRTableModel(dataObject);
     tableView.setModel(_tableModel);
     tableView.setItemDelegate(new RTTRItemDelegate(_tableModel));
